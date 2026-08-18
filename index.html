@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CalTrack — Calorie Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:          #0d0f14;
+      --surface:     #161921;
+      --surface-2:   #1e2230;
+      --border:      #2a2e3e;
+      --text:        #e8ecf4;
+      --muted:       #7b82a0;
+      --accent:      #6c63ff;
+      --accent-glow: rgba(108,99,255,.28);
+      --green:       #22c55e;
+      --amber:       #f59e0b;
+      --red:         #ef4444;
+      --radius:      14px;
+      --radius-sm:   8px;
+      --shadow:      0 8px 32px rgba(0,0,0,.45);
+      --transition:  .2s ease;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px 16px 64px;
+    }
+    button { cursor: pointer; border: none; font-family: inherit; }
+    input, select { font-family: inherit; }
+    .app { max-width: 780px; margin: 0 auto; }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+    .header-left h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -.5px;
+      background: linear-gradient(135deg,#fff 0%,var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .header-left p { color: var(--muted); font-size: .85rem; margin-top: 2px; }
+    .date-badge {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 6px 14px;
+      font-size: .8rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .ring-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .ring-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 20% 50%, var(--accent-glow), transparent 60%);
+      pointer-events: none;
+    }
+    .ring-wrap { position: relative; flex-shrink: 0; }
+    .ring-wrap svg { transform: rotate(-90deg); }
+    .ring-bg   { fill: none; stroke: var(--border); stroke-width: 9; }
+    .ring-fill {
+      fill: none;
+      stroke-width: 9;
+      stroke-linecap: round;
+      stroke-dasharray: 314;
+      stroke-dashoffset: 314;
+      transition: stroke-dashoffset .7s cubic-bezier(.4,0,.2,1), stroke .4s;
+    }
+    .ring-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .ring-center .kcal { font-size: 1.55rem; font-weight: 800; line-height: 1; }
+    .ring-center .label { font-size: .65rem; color: var(--muted); margin-top: 2px; text-transform: uppercase; letter-spacing: .08em; }
+    .ring-stats { flex: 1; }
+    .ring-stats h2 { font-size: .72rem; font-weight: 600; margin-bottom: 16px; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; }
+    .stat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+    .stat-box {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      text-align: center;
+    }
+    .stat-box .val { font-size: 1.2rem; font-weight: 700; }
+    .stat-box .lbl { font-size: .7rem; color: var(--muted); margin-top: 3px; text-transform: uppercase; letter-spacing: .07em; }
+    .val.green { color: var(--green); }
+    .val.amber { color: var(--amber); }
+    .val.red   { color: var(--red); }
+    .goal-banner {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+      font-size: .85rem;
+    }
+    .goal-banner span { color: var(--muted); }
+    .goal-banner strong { color: var(--text); }
+    .goal-edit { display: flex; align-items: center; gap: 8px; }
+    .goal-edit input {
+      width: 90px;
+      padding: 6px 10px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-size: .85rem;
+      outline: none;
+      transition: border-color var(--transition);
+    }
+    .goal-edit input:focus { border-color: var(--accent); }
+    .btn-sm {
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      font-size: .8rem;
+      font-weight: 600;
+      background: var(--accent);
+      color: #fff;
+      transition: opacity var(--transition), transform var(--transition);
+    }
+    .btn-sm:hover { opacity: .85; transform: translateY(-1px); }
+    .btn-sm:active { transform: translateY(0); }
+    .add-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    .add-card h3 { font-size: .9rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 14px; }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 120px 140px auto;
+      gap: 10px;
+      align-items: end;
+    }
+    .field label {
+      display: block;
+      font-size: .72rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 9px 12px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-size: .88rem;
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition);
+      appearance: none;
+    }
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    .field input::placeholder { color: var(--muted); }
+    .btn-add {
+      padding: 9px 20px;
+      background: linear-gradient(135deg, var(--accent), #8b5cf6);
+      border-radius: var(--radius-sm);
+      font-size: .88rem;
+      font-weight: 700;
+      color: #fff;
+      transition: opacity var(--transition), transform var(--transition), box-shadow var(--transition);
+      box-shadow: 0 4px 18px var(--accent-glow);
+      white-space: nowrap;
+    }
+    .btn-add:hover { opacity: .88; transform: translateY(-2px); box-shadow: 0 8px 28px var(--accent-glow); }
+    .btn-add:active { transform: translateY(0); }
+    .meals { display: flex; flex-direction: column; gap: 16px; }
+    .meal-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .meal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+    }
+    .meal-header-left { display: flex; align-items: center; gap: 10px; }
+    .meal-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .meal-header h4 { font-size: .9rem; font-weight: 600; }
+    .meal-header .meal-kcal { font-size: .8rem; color: var(--muted); }
+    .entry-list { list-style: none; }
+    .entry-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border);
+      transition: background var(--transition);
+      animation: slideIn .25s ease;
+    }
+    .entry-item:last-child { border-bottom: none; }
+    .entry-item:hover { background: var(--surface-2); }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .entry-left { display: flex; align-items: center; gap: 10px; }
+    .entry-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .entry-name { font-size: .88rem; font-weight: 500; }
+    .entry-time { font-size: .72rem; color: var(--muted); margin-top: 1px; }
+    .entry-right { display: flex; align-items: center; gap: 14px; }
+    .entry-kcal { font-size: .95rem; font-weight: 700; }
+    .btn-delete {
+      background: none;
+      color: var(--muted);
+      font-size: 1rem;
+      padding: 4px 6px;
+      border-radius: 6px;
+      transition: color var(--transition), background var(--transition);
+      line-height: 1;
+    }
+    .btn-delete:hover { color: var(--red); background: rgba(239,68,68,.12); }
+    .meal-empty {
+      padding: 18px;
+      text-align: center;
+      font-size: .8rem;
+      color: var(--muted);
+    }
+    .bar-track { height: 5px; background: var(--border); border-radius: 99px; overflow: hidden; margin-top: 8px; }
+    .bar-fill { height: 100%; border-radius: 99px; transition: width .6s cubic-bezier(.4,0,.2,1); }
+    #toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 10px 22px;
+      font-size: .83rem;
+      color: var(--text);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s, transform .25s;
+      white-space: nowrap;
+      z-index: 999;
+      box-shadow: var(--shadow);
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .tabs { display: flex; gap: 6px; margin-bottom: 20px; }
+    .tab {
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-size: .82rem;
+      font-weight: 600;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      transition: all var(--transition);
+    }
+    .tab.active { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 4px 16px var(--accent-glow); }
+    .tab:hover:not(.active) { color: var(--text); border-color: var(--accent); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .history-day {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+    .history-day-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+    }
+    .history-day-header h4 { font-size: .9rem; font-weight: 600; }
+    .history-day-header .hd-meta { font-size: .78rem; color: var(--muted); }
+    .history-entry {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 18px;
+      border-bottom: 1px solid var(--border);
+      font-size: .85rem;
+    }
+    .history-entry:last-child { border-bottom: none; }
+    .history-entry .he-left { display: flex; align-items: center; gap: 10px; }
+    .he-meal { font-size: .7rem; color: var(--muted); padding: 2px 8px; border-radius: 50px; background: var(--surface-2); border: 1px solid var(--border); }
+    .history-empty { text-align: center; color: var(--muted); padding: 40px 20px; font-size: .85rem; }
+    @media (max-width: 580px) {
+      .form-row { grid-template-columns: 1fr 1fr; }
+      .form-row .field:first-child { grid-column: 1 / -1; }
+      .form-row .btn-add { grid-column: 1 / -1; }
+      .ring-card { flex-direction: column; text-align: center; }
+      .stat-grid { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="header-left">
+      <h1>⚡ CalTrack</h1>
+      <p>Your daily nutrition companion</p>
+    </div>
+    <div class="date-badge" id="dateBadge"></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" id="tabToday" onclick="switchTab('today')">Today</button>
+    <button class="tab" id="tabHistory" onclick="switchTab('history')">History</button>
+  </div>
+
+  <div class="tab-panel active" id="panelToday">
+    <div class="ring-card">
+      <div class="ring-wrap">
+        <svg width="110" height="110" viewBox="0 0 110 110">
+          <circle class="ring-bg" cx="55" cy="55" r="50"/>
+          <circle class="ring-fill" id="ringFill" cx="55" cy="55" r="50"/>
+        </svg>
+        <div class="ring-center">
+          <span class="kcal" id="ringKcal">0</span>
+          <span class="label">kcal</span>
+        </div>
+      </div>
+      <div class="ring-stats">
+        <h2>Today's Overview</h2>
+        <div class="stat-grid">
+          <div class="stat-box">
+            <div class="val" id="statConsumed">0</div>
+            <div class="lbl">Consumed</div>
+          </div>
+          <div class="stat-box">
+            <div class="val" id="statGoal">2000</div>
+            <div class="lbl">Goal</div>
+          </div>
+          <div class="stat-box">
+            <div class="val green" id="statRemaining">2000</div>
+            <div class="lbl">Remaining</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="goal-banner">
+      <span>Daily Goal: <strong id="goalDisplay">2000 kcal</strong></span>
+      <div class="goal-edit">
+        <input type="number" id="goalInput" placeholder="2000" min="500" max="9999" />
+        <button class="btn-sm" onclick="updateGoal()">Set Goal</button>
+      </div>
+    </div>
+
+    <div class="add-card">
+      <h3>+ Add Entry</h3>
+      <div class="form-row">
+        <div class="field">
+          <label>Food / Item</label>
+          <input type="text" id="foodName" placeholder="e.g. Oatmeal with berries" maxlength="60" />
+        </div>
+        <div class="field">
+          <label>Calories</label>
+          <input type="number" id="foodKcal" placeholder="350" min="1" max="9999" />
+        </div>
+        <div class="field">
+          <label>Meal</label>
+          <select id="foodMeal">
+            <option value="breakfast">🌅 Breakfast</option>
+            <option value="lunch">☀️ Lunch</option>
+            <option value="dinner">🌙 Dinner</option>
+            <option value="snack">🍎 Snack</option>
+          </select>
+        </div>
+        <button class="btn-add" onclick="addEntry()">Add</button>
+      </div>
+    </div>
+
+    <div class="meals" id="mealsContainer"></div>
+  </div>
+
+  <div class="tab-panel" id="panelHistory">
+    <div id="historyContainer"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const MEALS = {
+  breakfast: { label: 'Breakfast', icon: '🌅', color: '#f59e0b' },
+  lunch:     { label: 'Lunch',     icon: '☀️', color: '#22c55e' },
+  dinner:    { label: 'Dinner',    icon: '🌙', color: '#6c63ff' },
+  snack:     { label: 'Snack',     icon: '🍎', color: '#ec4899' },
+};
+const KEY_ENTRIES = 'caltrack_entries';
+const KEY_GOAL    = 'caltrack_goal';
+
+function today() { return new Date().toISOString().slice(0,10); }
+function fmtDate(d) { return new Date(d+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}); }
+function fmtTime(ts) { return new Date(ts).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}); }
+function escHtml(s) { return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function loadEntries() { try { return JSON.parse(localStorage.getItem(KEY_ENTRIES))||[]; } catch { return []; } }
+function saveEntries(e) { localStorage.setItem(KEY_ENTRIES,JSON.stringify(e)); }
+function loadGoal() { return parseInt(localStorage.getItem(KEY_GOAL))||2000; }
+function saveGoal(g) { localStorage.setItem(KEY_GOAL,g); }
+
+let entries = loadEntries();
+let goal    = loadGoal();
+
+function addEntry() {
+  const name = document.getElementById('foodName').value.trim();
+  const kcal = parseInt(document.getElementById('foodKcal').value);
+  const meal = document.getElementById('foodMeal').value;
+  if (!name) { showToast('⚠️ Please enter a food name'); return; }
+  if (!kcal || kcal < 1) { showToast('⚠️ Please enter valid calories'); return; }
+  entries.push({ id: crypto.randomUUID(), name, kcal, meal, date: today(), timestamp: Date.now() });
+  saveEntries(entries);
+  document.getElementById('foodName').value = '';
+  document.getElementById('foodKcal').value = '';
+  renderToday();
+  showToast('✅ Added '+name+' — '+kcal+' kcal');
+}
+
+function deleteEntry(id) {
+  entries = entries.filter(e => e.id !== id);
+  saveEntries(entries);
+  renderToday();
+  renderHistory();
+  showToast('🗑️ Entry removed');
+}
+
+function updateGoal() {
+  const v = parseInt(document.getElementById('goalInput').value);
+  if (!v || v < 100) { showToast('⚠️ Enter a valid goal (≥ 100 kcal)'); return; }
+  goal = v; saveGoal(goal);
+  document.getElementById('goalInput').value = '';
+  renderToday();
+  showToast('🎯 Goal set to '+goal+' kcal');
+}
+
+function renderToday() {
+  const todayE = entries.filter(e => e.date === today());
+  const total = todayE.reduce((s,e) => s+e.kcal, 0);
+  const remaining = goal - total;
+  const pct = Math.min(total/goal, 1);
+  const circumference = 314;
+  document.getElementById('ringFill').style.strokeDashoffset = circumference - pct*circumference;
+  const ringColor = total > goal ? 'var(--red)' : total > goal*0.85 ? 'var(--amber)' : 'var(--accent)';
+  document.getElementById('ringFill').style.stroke = ringColor;
+  document.getElementById('ringKcal').textContent = total.toLocaleString();
+  document.getElementById('statConsumed').textContent = total.toLocaleString();
+  document.getElementById('statGoal').textContent = goal.toLocaleString();
+  const remEl = document.getElementById('statRemaining');
+  remEl.textContent = Math.abs(remaining).toLocaleString()+(remaining<0?' over':'');
+  remEl.className = 'val '+(remaining<0?'red':remaining<goal*0.15?'amber':'green');
+  document.getElementById('goalDisplay').textContent = goal.toLocaleString()+' kcal';
+  document.getElementById('goalInput').placeholder = goal;
+
+  const container = document.getElementById('mealsContainer');
+  container.innerHTML = '';
+  Object.entries(MEALS).forEach(([key, meta]) => {
+    const mE = todayE.filter(e => e.meal === key);
+    const mT = mE.reduce((s,e) => s+e.kcal, 0);
+    const mP = goal ? Math.min(mT/goal*100,100) : 0;
+    const sec = document.createElement('div');
+    sec.className = 'meal-section';
+    sec.innerHTML = `
+      <div class="meal-header">
+        <div class="meal-header-left">
+          <div class="meal-icon" style="background:${meta.color}22;">${meta.icon}</div>
+          <div>
+            <h4>${meta.label}</h4>
+            <div class="bar-track" style="width:140px;">
+              <div class="bar-fill" style="width:${mP}%;background:${meta.color};"></div>
+            </div>
+          </div>
+        </div>
+        <span class="meal-kcal">${mT>0?mT.toLocaleString()+' kcal':'—'}</span>
+      </div>
+      ${mE.length===0
+        ? '<div class="meal-empty">No entries yet</div>'
+        : '<ul class="entry-list">'+mE.map(e=>`
+          <li class="entry-item">
+            <div class="entry-left">
+              <span class="entry-dot" style="background:${meta.color};"></span>
+              <div>
+                <div class="entry-name">${escHtml(e.name)}</div>
+                <div class="entry-time">${fmtTime(e.timestamp)}</div>
+              </div>
+            </div>
+            <div class="entry-right">
+              <span class="entry-kcal" style="color:${meta.color};">${e.kcal.toLocaleString()} kcal</span>
+              <button class="btn-delete" title="Delete" onclick="deleteEntry('${e.id}')">✕</button>
+            </div>
+          </li>`).join('')+'</ul>'
+      }`;
+    container.appendChild(sec);
+  });
+}
+
+function renderHistory() {
+  const container = document.getElementById('historyContainer');
+  const byDate = {};
+  entries.forEach(e => { if (!byDate[e.date]) byDate[e.date]=[]; byDate[e.date].push(e); });
+  const dates = Object.keys(byDate).sort((a,b) => b.localeCompare(a));
+  if (dates.length === 0) {
+    container.innerHTML = '<div class="history-empty">📋 No history yet. Start logging today!</div>';
+    return;
+  }
+  container.innerHTML = dates.map(date => {
+    const dE = byDate[date].sort((a,b) => a.timestamp-b.timestamp);
+    const dT = dE.reduce((s,e) => s+e.kcal, 0);
+    const gP = Math.round(dT/goal*100);
+    const isToday = date === today();
+    return `<div class="history-day">
+      <div class="history-day-header">
+        <h4>${isToday?'📍 Today':fmtDate(date)}</h4>
+        <div class="hd-meta" style="color:${dT>goal?'var(--red)':'var(--green)'};">
+          ${dT.toLocaleString()} / ${goal.toLocaleString()} kcal (${gP}%)
+        </div>
+      </div>
+      ${dE.map(e=>{const m=MEALS[e.meal];return`
+        <div class="history-entry">
+          <div class="he-left">
+            <span class="he-meal">${m.icon} ${m.label}</span>
+            <span>${escHtml(e.name)}</span>
+          </div>
+          <span style="font-weight:600;color:${m.color};">${e.kcal.toLocaleString()} kcal</span>
+        </div>`;}).join('')}
+    </div>`;
+  }).join('');
+}
+
+function switchTab(tab) {
+  document.getElementById('panelToday').classList.toggle('active', tab==='today');
+  document.getElementById('panelHistory').classList.toggle('active', tab==='history');
+  document.getElementById('tabToday').classList.toggle('active', tab==='today');
+  document.getElementById('tabHistory').classList.toggle('active', tab==='history');
+  if (tab==='history') renderHistory();
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    if (document.activeElement.id === 'goalInput') { updateGoal(); return; }
+    if (['foodName','foodKcal','foodMeal'].includes(document.activeElement.id)) addEntry();
+  }
+});
+
+document.getElementById('dateBadge').textContent = new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+renderToday();
+</script>
+</body>
+</html>
