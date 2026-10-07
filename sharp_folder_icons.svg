@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="24" viewBox="0 0 60 24" fill="none" stroke="currentColor" stroke-width="2">
+  <!-- Owned By You: Sharp Music Folder (20x20 at x=2, y=2) -->
+  <g id="owned-music-folder-sharp" transform="translate(2, 2)">
+    <!-- 100% Sharp Folder Outline (No Rounded Corners) -->
+    <path d="M2 5h5l2 2h9v9H2V5z"/>
+    <!-- Sharp Geometric Music Note -->
+    <rect x="7" y="11" width="3" height="3" fill="currentColor" stroke="none"/>
+    <path d="M10 11V8h3v2"/>
+  </g>
+
+  <!-- Shared With You: Sharp Folder with Inward Arrow (20x20 at x=34, y=2) -->
+  <g id="shared-arrow-folder-sharp" transform="translate(34, 2)">
+    <!-- 100% Sharp Folder Outline (No Rounded Corners) -->
+    <path d="M2 5h5l2 2h9v9H2V5z"/>
+    <!-- Sharp Angular Inward Arrow -->
+    <path d="M10 8v5M7.5 10.5L10 13l2.5-2.5"/>
+  </g>
+</svg>

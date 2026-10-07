@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="28" viewBox="0 0 100 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Option 5A: Standard Cardinal Ticks + Solid Core (from mockup) -->
+  <g id="option-5a-standard" transform="translate(4, 4)">
+    <circle cx="10" cy="10" r="4" />
+    <circle cx="10" cy="10" r="1.5" fill="currentColor" stroke="none" />
+    <path d="M10 2.5v2" />
+    <path d="M10 15.5v2" />
+    <path d="M2.5 10h2" />
+    <path d="M15.5 10h2" />
+  </g>
+
+  <!-- Option 5B: Pure Vector Stroke (Hollow Core - 100% Stroke, No Fill) -->
+  <g id="option-5b-all-stroke" transform="translate(40, 4)">
+    <circle cx="10" cy="10" r="4.5" />
+    <circle cx="10" cy="10" r="1.5" />
+    <path d="M10 2v1.5" />
+    <path d="M10 16.5v1.5" />
+    <path d="M2 10h1.5" />
+    <path d="M16.5 10h1.5" />
+  </g>
+
+  <!-- Option 5C: Slightly Extended Emitting Rays (High Visibility) -->
+  <g id="option-5c-longer-rays" transform="translate(76, 4)">
+    <circle cx="10" cy="10" r="3.75" />
+    <circle cx="10" cy="10" r="1.25" fill="currentColor" stroke="none" />
+    <path d="M10 2v2.5" />
+    <path d="M10 15.5v2.5" />
+    <path d="M2 10h2.5" />
+    <path d="M15.5 10h2.5" />
+  </g>
+</svg>

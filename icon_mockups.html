@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Owned By You — Icon Explorations (20×20px, 2px stroke)</title>
+  <style>
+    :root {
+      --primary-blue: #1346ba;
+      --tab-active-bg: #1346ba;
+      --tab-active-text: #ffffff;
+      --tab-inactive-bg: #dce4f7;
+      --tab-inactive-text: #1346ba;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      padding: 40px 24px 80px;
+      line-height: 1.5;
+    }
+
+    .wrapper {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    .page-header {
+      margin-bottom: 28px;
+    }
+    .page-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--primary-blue);
+      margin-bottom: 6px;
+    }
+    .page-desc {
+      color: var(--text-muted);
+      font-size: 14px;
+      max-width: 650px;
+    }
+
+    /* Approved Reference Banner */
+    .reference-box {
+      background: #eff6ff;
+      border: 1.5px solid #bfdbfe;
+      border-radius: 12px;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .ref-meta {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .pill-tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      background: #2563eb;
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    /* Options Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(490px, 1fr));
+      gap: 24px;
+    }
+
+    .option-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .card-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #e0e7ff;
+      color: #3730a3;
+    }
+    .badge.recommended {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    /* Comparison Row (Replicating exact screenshot layout) */
+    .tab-comparison {
+      background: #f1f5f9;
+      padding: 16px;
+      border-radius: 10px;
+    }
+    .tab-comparison-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .tab-row {
+      display: inline-flex;
+      border-bottom: 2px solid var(--primary-blue);
+      background: transparent;
+      user-select: none;
+    }
+    .tab-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .tab-btn.active {
+      background: var(--tab-active-bg);
+      color: var(--tab-active-text);
+    }
+    .tab-btn.inactive {
+      background: var(--tab-inactive-bg);
+      color: var(--tab-inactive-text);
+    }
+
+    /* Scales View */
+    .scales-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 12px 16px;
+      background: #fafafa;
+      border: 1px dashed #e2e8f0;
+      border-radius: 8px;
+    }
+    .scale-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .scale-box span {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .icon-preview {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+    }
+    .icon-preview.p20 { width: 36px; height: 36px; }
+    .icon-preview.p40 { width: 56px; height: 56px; }
+
+    .rationale {
+      font-size: 13px;
+      color: #334155;
+      line-height: 1.5;
+    }
+
+    .code-accordion {
+      background: #0f172a;
+      border-radius: 8px;
+      padding: 12px 14px;
+      color: #f8fafc;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 11px;
+      overflow-x: auto;
+      white-space: pre;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wrapper">
+    <div class="page-header">
+      <h1 class="page-title">"Owned By You" Icon Proposals</h1>
+      <p class="page-desc">
+        Designed strictly to the <strong>20×20px grid</strong> with a <strong>2px stroke</strong> to pair harmoniously with the approved "Shared With You" recipient icon.
+      </p>
+    </div>
+
+    <!-- Approved Reference -->
+    <div class="reference-box">
+      <div class="ref-meta">
+        <span class="pill-tag">Approved Design</span>
+        <svg width="24" height="24" viewBox="0 0 20 20" fill="none" stroke="#1346ba" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <!-- Top coin with $ -->
+          <circle cx="10" cy="5.5" r="3.5"/>
+          <path d="M10 3.8v3.4" stroke-width="1.3"/>
+          <path d="M8.8 4.6c.3-.3.8-.4 1.2-.4.7 0 1 .4.8.8-.2.4-.6.5-1.2.6-.5.1-.8.4-.7.8.1.4.6.6 1.1.5" stroke-width="1.1"/>
+          <!-- Branches -->
+          <path d="M8 8.5L5.5 13.5"/>
+          <path d="M12 8.5L14.5 13.5"/>
+          <!-- Collaborator nodes -->
+          <circle cx="4.5" cy="15.5" r="2"/>
+          <circle cx="15.5" cy="15.5" r="2"/>
+        </svg>
+        <div>
+          <strong style="color:#1e3a8a; font-size:14px;">Shared With You (Recipient)</strong>
+          <div style="color:#2563eb; font-size:12px;">Visual language: Currency coin distributing out to multiple recipient nodes</div>
+        </div>
+      </div>
+      <div style="font-size:12px; color:#64748b;">
+        Tab context: Revenue Sharing Hub
+      </div>
+    </div>
+
+    <div class="grid">
+
+      <!-- ================= OPTION 1 ================= -->
+      <div class="option-card">
+        <div class="card-top">
+          <div>
+            <div class="card-title">Option 1: Owner Profile (Solo User vs. Network)</div>
+            <div class="card-subtitle">Direct human balance to the multi-node network</div>
+          </div>
+          <span class="badge recommended">Top Recommendation</span>
+        </div>
+
+        <div class="tab-comparison">
+          <div class="tab-comparison-title">In-Context UI (Active vs Inactive)</div>
+          <div class="tab-row">
+            <!-- Active Owned -->
+            <div class="tab-btn active">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="10" cy="6.5" r="3.5"/>
+                <path d="M3.5 17c0-3.3 2.9-5.5 6.5-5.5s6.5 2.2 6.5 5.5"/>
+              </svg>
+              Owned By You
+            </div>
+            <!-- Inactive Shared -->
+            <div class="tab-btn inactive">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="10" cy="5.5" r="3.5"/>
+                <path d="M10 4v3"/>
+                <path d="M8 8.5L5.5 13.5"/>
+                <path d="M12 8.5L14.5 13.5"/>
+                <circle cx="4.5" cy="15.5" r="2"/>
+                <circle cx="15.5" cy="15.5" r="2"/>
+              </svg>
+              Shared With You
+            </div>
+          </div>
+        </div>
+
+        <div class="scales-row">
+          <div class="scale-box">
+            <div class="icon-preview p20">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#1346ba" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="10" cy="6.5" r="3.5"/>
+                <path d="M3.5 17c0-3.3 2.9-5.5 6.5-5.5s6.5 2.2 6.5 5.5"/>
+              </svg>
+            </div>
+            <span>Native 20px</span>
+          </div>
+          <div class="scale-box">
+            <div class="icon-preview p40">
+              <svg width="32" height="32" viewBox="0 0 20 20" fill="none" stroke="#1346ba" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="10" cy="6.5" r="3.5"/>
+                <path d="M3.5 17c0-3.3 2.9-5.5 6.5-5.5s6.5 2.2 6.5 5.5"/>
+              </svg>
+            </div>
+            <span>Enlarged</span>
+          </div>
+        </div>
+
+        <p class="rationale">
+          <strong>Design Logic:</strong> Semantically, "Shared With You" shows an interconnected network of multiple recipients. This icon offers the exact conceptual counterpart: the single account owner. Its circular head (radius 3.5) perfectly matches the top coin of the shared icon, giving 100% visual harmony.
+        </p>
+
+        <div class="code-accordion">&lt;svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"&gt;
+  &lt;circle cx="10" cy="6.5" r="3.5" /&gt;
+  &lt;path d="M3.5 17c0-3.3 2.9-5.5 6.5-5.5s6.5 2.2 6.5 5.5" /&gt;
+&lt;/svg&gt;</div>
+      </div>
+
+
+      <!-- ================= OPTION 2 ================= -->
+      <div class="option-card">
+        <div class="card-top">
+          <div>
+            <div class="card-title">Option 2: Master Vinyl / Release Disc</div>
+            <div class="card-subtitle">Music-native symbol representing the master recording</div>
+          </div>
+          <span class="badge recommended">Music Context Best</span>
+        </div>
+
+        <div class="tab-comparison">
+          <div class="tab-comparison-title">In-Context UI (Active vs Inactive)</div>
+          <div class="tab-row">
+            <div class="tab-btn active">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="10" cy="10" r="7.5"/>
+                <circle cx="10" cy="10" r="2.5"/>
+                <path d="M14 10a4 4 0 0 0-4-4"/>
+              </svg>
+              Owned By You
+            </div>
+            <div class="tab-btn inactive">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="10" cy="5.5" r="3.5"/>
+                <path d="M10 4v3"/>
+                <path d="M8 8.5L5.5 13.5"/>
+                <path d="M12 8.5L14.5 13.5"/>
+                <circle cx="4.5" cy="15.5" r="2"/>
+                <circle cx="15.5" cy="15.5" r="2"/>
+              </svg>
+              Shared With You
+            </div>
+          </div>
+        </div>
+
+        <div class="scales-row">
+          <div class="scale-box">
+            <div class="icon-preview p20">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#1346ba" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="10" cy="10" r="7.5"/>
+                <circle cx="10" cy="10" r="2.5"/>
+                <path d="M14 10a4 4 0 0 0-4-4"/>
+              </svg>
+            </div>
+            <span>Native 20px</span>
+          </div>
+          <div class="scale-box">
+            <div class="icon-preview p40">
+              <svg width="32" height="32" viewBox="0 0 20 20" fill="none" stroke="#1346ba" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="10" cy="10" r="7.5"/>
+                <circle cx="10" cy="10" r="2.5"/>
+                <path d="M14 10a4 4 0 0 0-4-4"/>
+              </svg>
+            </div>
+            <span>Enlarged</span>
+          </div>
+        </div>
+
+        <p class="rationale">
+          <strong>Design Logic:</strong> On RouteNote, what users actually "own" is their <em>releases and tracks</em>. The vinyl record represents the master audio asset. The concentric circles pair effortlessly with the circular nodes in the sharing tree.
+        </p>
+
+        <div class="code-accordion">&lt;svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"&gt;
+  &lt;circle cx="10" cy="10" r="7.5" /&gt;
+  &lt;circle cx="10" cy="10" r="2.5" /&gt;
+  &lt;path d="M14 10a4 4 0 0 0-4-4" /&gt;
+&lt;/svg&gt;</div>
+      </div>
+
+
+      <!-- ================= OPTION 3 ================= -->
+      <div class="option-card">
+        <div class="card-top">
+          <div>
+            <div class="card-title">Option 3: Sovereign Crown (Master Rights Holder)</div>
+            <div class="card-subtitle">Royalty ownership & primary rights metaphor</div>
+          </div>
+          <span class="badge">Authoritative</span>
+        </div>
+
+        <div class="tab-comparison">
+          <div class="tab-comparison-title">In-Context UI (Active vs Inactive)</div>
+          <div class="tab-row">
+            <div class="tab-btn active">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3.5 14.5L5 6.5L10 10.5L15 6.5L16.5 14.5H3.5Z"/>
+                <line x1="3.5" y1="16.5" x2="16.5" y2="16.5"/>
+              </svg>
+              Owned By You
+            </div>
+            <div class="tab-btn inactive">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="10" cy="5.5" r="3.5"/>
+                <path d="M10 4v3"/>
+                <path d="M8 8.5L5.5 13.5"/>
+                <path d="M12 8.5L14.5 13.5"/>
+                <circle cx="4.5" cy="15.5" r="2"/>
+                <circle cx="15.5" cy="15.5" r="2"/>
+              </svg>
+              Shared With You
+            </div>
+          </div>
+        </div>
+
+        <div class="scales-row">
+          <div class="scale-box">
+            <div class="icon-preview p20">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#1346ba" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3.5 14.5L5 6.5L10 10.5L15 6.5L16.5 14.5H3.5Z"/>
+                <line x1="3.5" y1="16.5" x2="16.5" y2="16.5"/>
+              </svg>
+            </div>
+            <span>Native 20px</span>
+          </div>
+          <div class="scale-box">
+            <div class="icon-preview p40">
+              <svg width="32" height="32" viewBox="0 0 20 20" fill="none" stroke="#1346ba" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3.5 14.5L5 6.5L10 10.5L15 6.5L16.5 14.5H3.5Z"/>
+                <line x1="3.5" y1="16.5" x2="16.5" y2="16.5"/>
+              </svg>
+            </div>
+            <span>Enlarged</span>
+          </div>
+        </div>
+
+        <p class="rationale">
+          <strong>Design Logic:</strong> Crown = "Royalty" and "Owner". High distinction at 20px with crisp diagonal angles. Signals that the owner is the primary authority dictating splits to the recipient branches.
+        </p>
+
+        <div class="code-accordion">&lt;svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"&gt;
+  &lt;path d="M3.5 14.5L5 6.5L10 10.5L15 6.5L16.5 14.5H3.5Z" /&gt;
+  &lt;line x1="3.5" y1="16.5" x2="16.5" y2="16.5" /&gt;
+&lt;/svg&gt;</div>
+      </div>
+
+
+      <!-- ================= OPTION 4 ================= -->
+      <div class="option-card">
+        <div class="card-top">
+          <div>
+            <div class="card-title">Option 4: Master Key (Administrative Control)</div>
+            <div class="card-subtitle">Holding the key to rights and arrangements</div>
+          </div>
+          <span class="badge">Functional</span>
+        </div>
+
+        <div class="tab-comparison">
+          <div class="tab-comparison-title">In-Context UI (Active vs Inactive)</div>
+          <div class="tab-row">
+            <div class="tab-btn active">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="7" cy="7" r="4.5"/>
+                <path d="M10.2 10.2L16.5 16.5"/>
+                <path d="M13.5 13.5l1.5-1.5"/>
+                <path d="M15.5 15.5l1.5-1.5"/>
+              </svg>
+              Owned By You
+            </div>
+            <div class="tab-btn inactive">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="10" cy="5.5" r="3.5"/>
+                <path d="M10 4v3"/>
+                <path d="M8 8.5L5.5 13.5"/>
+                <path d="M12 8.5L14.5 13.5"/>
+                <circle cx="4.5" cy="15.5" r="2"/>
+                <circle cx="15.5" cy="15.5" r="2"/>
+              </svg>
+              Shared With You
+            </div>
+          </div>
+        </div>
+
+        <div class="scales-row">
+          <div class="scale-box">
+            <div class="icon-preview p20">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#1346ba" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="7" cy="7" r="4.5"/>
+                <path d="M10.2 10.2L16.5 16.5"/>
+                <path d="M13.5 13.5l1.5-1.5"/>
+                <path d="M15.5 15.5l1.5-1.5"/>
+              </svg>
+            </div>
+            <span>Native 20px</span>
+          </div>
+          <div class="scale-box">
+            <div class="icon-preview p40">
+              <svg width="32" height="32" viewBox="0 0 20 20" fill="none" stroke="#1346ba" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="7" cy="7" r="4.5"/>
+                <path d="M10.2 10.2L16.5 16.5"/>
+                <path d="M13.5 13.5l1.5-1.5"/>
+                <path d="M15.5 15.5l1.5-1.5"/>
+              </svg>
+            </div>
+            <span>Enlarged</span>
+          </div>
+        </div>
+
+        <p class="rationale">
+          <strong>Design Logic:</strong> The "master key" metaphor denotes direct administrative custody. The owner holds the key to edit and manage participants; collaborators only see what's shared with them.
+        </p>
+
+        <div class="code-accordion">&lt;svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"&gt;
+  &lt;circle cx="7" cy="7" r="4.5" /&gt;
+  &lt;path d="M10.2 10.2L16.5 16.5" /&gt;
+  &lt;path d="M13.5 13.5l1.5-1.5" /&gt;
+  &lt;path d="M15.5 15.5l1.5-1.5" /&gt;
+&lt;/svg&gt;</div>
+      </div>
+
+
+      <!-- ================= OPTION 5 ================= -->
+      <div class="option-card">
+        <div class="card-top">
+          <div>
+            <div class="card-title">Option 5: Origin Source Node (Direct Sister to Tree)</div>
+            <div class="card-subtitle">Root central hub from which shares emanate</div>
+          </div>
+          <span class="badge">Geometric Match</span>
+        </div>
+
+        <div class="tab-comparison">
+          <div class="tab-comparison-title">In-Context UI (Active vs Inactive)</div>
+          <div class="tab-row">
+            <div class="tab-btn active">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="10" cy="10" r="4"/>
+                <circle cx="10" cy="10" r="1.5" fill="currentColor"/>
+                <path d="M10 2.5v2M10 15.5v2M2.5 10h2M15.5 10h2"/>
+              </svg>
+              Owned By You
+            </div>
+            <div class="tab-btn inactive">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="10" cy="5.5" r="3.5"/>
+                <path d="M10 4v3"/>
+                <path d="M8 8.5L5.5 13.5"/>
+                <path d="M12 8.5L14.5 13.5"/>
+                <circle cx="4.5" cy="15.5" r="2"/>
+                <circle cx="15.5" cy="15.5" r="2"/>
+              </svg>
+              Shared With You
+            </div>
+          </div>
+        </div>
+
+        <div class="scales-row">
+          <div class="scale-box">
+            <div class="icon-preview p20">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#1346ba" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="10" cy="10" r="4"/>
+                <circle cx="10" cy="10" r="1.5" fill="#1346ba"/>
+                <path d="M10 2.5v2M10 15.5v2M2.5 10h2M15.5 10h2"/>
+              </svg>
+            </div>
+            <span>Native 20px</span>
+          </div>
+          <div class="scale-box">
+            <div class="icon-preview p40">
+              <svg width="32" height="32" viewBox="0 0 20 20" fill="none" stroke="#1346ba" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="10" cy="10" r="4"/>
+                <circle cx="10" cy="10" r="1.5" fill="#1346ba"/>
+                <path d="M10 2.5v2M10 15.5v2M2.5 10h2M15.5 10h2"/>
+              </svg>
+            </div>
+            <span>Enlarged</span>
+          </div>
+        </div>
+
+        <p class="rationale">
+          <strong>Design Logic:</strong> The topological twin to the branching tree. While "Shared With You" is the distribution tree, "Owned By You" is the origin hub radiating out in all directions.
+        </p>
+
+        <div class="code-accordion">&lt;svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"&gt;
+  &lt;circle cx="10" cy="10" r="4" /&gt;
+  &lt;circle cx="10" cy="10" r="1.5" fill="currentColor" /&gt;
+  &lt;path d="M10 2.5v2M10 15.5v2M2.5 10h2M15.5 10h2" /&gt;
+&lt;/svg&gt;</div>
+      </div>
+
+
+      <!-- ================= OPTION 6 ================= -->
+      <div class="option-card">
+        <div class="card-top">
+          <div>
+            <div class="card-title">Option 6: Verified Rights Shield (Copyright & Safety)</div>
+            <div class="card-subtitle">Protected catalog rights with verification mark</div>
+          </div>
+          <span class="badge">Trust & Legal</span>
+        </div>
+
+        <div class="tab-comparison">
+          <div class="tab-comparison-title">In-Context UI (Active vs Inactive)</div>
+          <div class="tab-row">
+            <div class="tab-btn active">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 2.5L4.5 5v5c0 4.2 2.8 6.5 5.5 7.5 2.7-1 5.5-3.3 5.5-7.5V5L10 2.5z"/>
+                <path d="M8 10l1.5 1.5 3-3"/>
+              </svg>
+              Owned By You
+            </div>
+            <div class="tab-btn inactive">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="10" cy="5.5" r="3.5"/>
+                <path d="M10 4v3"/>
+                <path d="M8 8.5L5.5 13.5"/>
+                <path d="M12 8.5L14.5 13.5"/>
+                <circle cx="4.5" cy="15.5" r="2"/>
+                <circle cx="15.5" cy="15.5" r="2"/>
+              </svg>
+              Shared With You
+            </div>
+          </div>
+        </div>
+
+        <div class="scales-row">
+          <div class="scale-box">
+            <div class="icon-preview p20">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#1346ba" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 2.5L4.5 5v5c0 4.2 2.8 6.5 5.5 7.5 2.7-1 5.5-3.3 5.5-7.5V5L10 2.5z"/>
+                <path d="M8 10l1.5 1.5 3-3"/>
+              </svg>
+            </div>
+            <span>Native 20px</span>
+          </div>
+          <div class="scale-box">
+            <div class="icon-preview p40">
+              <svg width="32" height="32" viewBox="0 0 20 20" fill="none" stroke="#1346ba" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 2.5L4.5 5v5c0 4.2 2.8 6.5 5.5 7.5 2.7-1 5.5-3.3 5.5-7.5V5L10 2.5z"/>
+                <path d="M8 10l1.5 1.5 3-3"/>
+              </svg>
+            </div>
+            <span>Enlarged</span>
+          </div>
+        </div>
+
+        <p class="rationale">
+          <strong>Design Logic:</strong> Emphasizes legal protection and verified ownership of intellectual property. Reassuring for music distributors.
+        </p>
+
+        <div class="code-accordion">&lt;svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"&gt;
+  &lt;path d="M10 2.5L4.5 5v5c0 4.2 2.8 6.5 5.5 7.5 2.7-1 5.5-3.3 5.5-7.5V5L10 2.5z" /&gt;
+  &lt;path d="M8 10l1.5 1.5 3-3" /&gt;
+&lt;/svg&gt;</div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

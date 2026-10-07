@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="24" viewBox="0 0 60 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Owned by You: Music Folder (20x20 at x=2, y=2) -->
+  <g id="owned-music-folder" transform="translate(2, 2)">
+    <!-- Folder perimeter -->
+    <path d="M2 5.5a1 1 0 0 1 1-1h4l2 2h8a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-9z"/>
+    <!-- Musical Note -->
+    <circle cx="8" cy="12.5" r="1.5" fill="currentColor"/>
+    <path d="M9.5 12.5V8.5l3-1v3" stroke-width="1.8"/>
+    <circle cx="12.5" cy="11.5" r="1" fill="currentColor"/>
+  </g>
+
+  <!-- Shared with You: Folder with Inward Arrow (20x20 at x=34, y=2) -->
+  <g id="shared-arrow-folder" transform="translate(34, 2)">
+    <!-- Folder perimeter -->
+    <path d="M2 5.5a1 1 0 0 1 1-1h4l2 2h8a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-9z"/>
+    <!-- Incoming downward arrow -->
+    <path d="M10 8v5M7.5 10.5L10 13l2.5-2.5"/>
+  </g>
+</svg>
